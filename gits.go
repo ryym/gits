@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"flag"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -12,14 +13,37 @@ type Dir struct {
 	Path     string
 }
 
-func main() {
-	if len(os.Args) != 2 {
-		fmt.Println("gits lists up git repositories in the specified path.")
-		fmt.Println("Usage: gits <path>")
-		os.Exit(1)
+type Options struct {
+	Help bool
+}
+
+func parseArgs() (Options, string) {
+	help := flag.Bool("h", false, "Show help message")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "gits lists up git repositories in the specified path.\n")
+		fmt.Fprintf(os.Stderr, "Usage: gits [options] <path>\n")
+		flag.PrintDefaults()
+	}
+	flag.Parse()
+
+	opts := Options{
+		Help: *help,
 	}
 
-	root := os.Args[1]
+	if opts.Help || len(flag.Args()) != 1 {
+		flag.Usage()
+		return Options{}, ""
+	}
+
+	return opts, flag.Args()[0]
+}
+
+func main() {
+	_, root := parseArgs()
+	if root == "" {
+		return
+	}
 
 	dirs, err := ListRepos(root)
 	if err != nil {
