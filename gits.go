@@ -47,7 +47,7 @@ func main() {
 
 	dirs, err := ListRepos(root)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 
