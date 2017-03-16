@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -14,10 +14,12 @@ type Dir struct {
 }
 
 type Options struct {
-	Help bool
+	FullPath bool
+	Help     bool
 }
 
 func parseArgs() (Options, string) {
+	fullpath := flag.Bool("p", false, "Print full paths")
 	help := flag.Bool("h", false, "Show help message")
 
 	flag.Usage = func() {
@@ -28,7 +30,8 @@ func parseArgs() (Options, string) {
 	flag.Parse()
 
 	opts := Options{
-		Help: *help,
+		FullPath: *fullpath,
+		Help:     *help,
 	}
 
 	if opts.Help || len(flag.Args()) != 1 {
@@ -40,20 +43,31 @@ func parseArgs() (Options, string) {
 }
 
 func main() {
-	_, root := parseArgs()
+	opts, root := parseArgs()
 	if root == "" {
 		return
 	}
+	var err error
 
-	dirs, err := ListRepos(root)
+	root, err = filepath.Abs(root)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+
+	var dirs []Dir
+	dirs, err = ListRepos(root)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 
 	for _, d := range dirs {
-		relpath, _ := filepath.Rel(root, d.Path)
-		fmt.Println(relpath)
+		repoPath := d.Path
+		if !opts.FullPath {
+			repoPath, _ = filepath.Rel(root, repoPath)
+		}
+		fmt.Println(repoPath)
 	}
 }
 
