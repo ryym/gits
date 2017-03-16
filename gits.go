@@ -23,7 +23,7 @@ func parseArgs() (Options, string) {
 	help := flag.Bool("h", false, "Show help message")
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "gits lists up git repositories in the specified path.\n")
+		fmt.Fprintf(os.Stderr, "gits lists git repositories in the specified path.\n")
 		fmt.Fprintf(os.Stderr, "Usage: gits [options] <path>\n")
 		flag.PrintDefaults()
 	}

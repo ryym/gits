@@ -1,10 +1,10 @@
 # Gits
 
-Gits lists up all git repositories in the specified path.
+Gits lists all git repositories in the specified path.
 
 ## Usage
 
-For instance, you can list up git packages in the `$GOPATH/src` using this command.
+For instance, you can list git packages in the `$GOPATH/src` using this command.
 
 ```sh
 $ gits $GOPATH/src
