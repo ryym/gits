@@ -42,24 +42,28 @@ func parseArgs() (Options, string) {
 	return opts, flag.Args()[0]
 }
 
+func fatal(err error) {
+	fmt.Fprintln(os.Stderr, err.Error())
+	os.Exit(1)
+}
+
 func main() {
 	opts, root := parseArgs()
 	if root == "" {
 		return
 	}
+
 	var err error
 
 	root, err = filepath.Abs(root)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		fatal(err)
 	}
 
 	var dirs []Dir
 	dirs, err = ListRepos(root)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		fatal(err)
 	}
 
 	for _, d := range dirs {
@@ -97,5 +101,6 @@ func ListRepos(path string) ([]Dir, error) {
 			dirs = append(dirs, Dir{FileInfo: f, Path: dir})
 		}
 	}
+
 	return dirs, nil
 }
