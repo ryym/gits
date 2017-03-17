@@ -91,7 +91,7 @@ func ListRepos(path string, gitDir string) ([]Dir, error) {
 		dir := filepath.Join(path, f.Name())
 		git := filepath.Join(dir, gitDir)
 
-		if _, er := os.Stat(git); os.IsNotExist(er) {
+		if fi, er := os.Stat(git); os.IsNotExist(er) || !fi.IsDir() {
 			childs, err := ListRepos(dir, gitDir)
 			if err != nil {
 				return nil, err
