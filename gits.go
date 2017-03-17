@@ -61,7 +61,7 @@ func main() {
 	}
 
 	var dirs []Dir
-	dirs, err = ListRepos(root)
+	dirs, err = ListRepos(root, ".git")
 	if err != nil {
 		fatal(err)
 	}
@@ -75,7 +75,7 @@ func main() {
 	}
 }
 
-func ListRepos(path string) ([]Dir, error) {
+func ListRepos(path string, gitDir string) ([]Dir, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, err
@@ -84,15 +84,15 @@ func ListRepos(path string) ([]Dir, error) {
 	dirs := make([]Dir, 0)
 
 	for _, f := range files {
-		if !f.IsDir() || f.Name() == ".git" {
+		if !f.IsDir() || f.Name() == gitDir {
 			continue
 		}
 
 		dir := filepath.Join(path, f.Name())
-		git := filepath.Join(dir, ".git")
+		git := filepath.Join(dir, gitDir)
 
 		if _, er := os.Stat(git); os.IsNotExist(er) {
-			childs, err := ListRepos(dir)
+			childs, err := ListRepos(dir, gitDir)
 			if err != nil {
 				return nil, err
 			}
