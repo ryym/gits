@@ -1,5 +1,7 @@
 # Gits
 
+[![travis](https://travis-ci.org/ryym/gits.svg?branch=master)](https://travis-ci.org/ryym/gits)
+
 Gits lists all git repositories in the specified path.
 
 ## Usage
