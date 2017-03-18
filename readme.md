@@ -6,6 +6,14 @@ Gits lists all git repositories in the specified path.
 
 ## Usage
 
+```sh
+$ gits
+gits lists git repositories in the specified path.
+Usage: gits [options] <path>
+  -h    Show help message
+  -p    Print full paths
+```
+
 For instance, you can list git packages in the `$GOPATH/src` using this command.
 
 ```sh
